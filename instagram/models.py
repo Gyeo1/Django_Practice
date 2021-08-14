@@ -11,6 +11,8 @@ class Post(models.Model):
     def __str__(self):
         #return f"Custom Post Object({self.id})"
         return self.message
+    class Meta:
+        ordering=['-id']
 #     def message_length(self):
 #         return len(self.message)
 # #auto_now와 auto_now_add는 자동으로 시각이 입력되는 개념이다
