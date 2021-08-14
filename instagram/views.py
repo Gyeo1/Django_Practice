@@ -12,4 +12,3 @@ def post_list(request):#호출 당시의 모든 내역을 전달 받는 함수!
 #render함수의 가운데 경로는 실제 instagram 내부의 경로로 실제 경로를 만들어 줘야 된다.
 #여기서 template의 post_list는 {}안의 post_list를 참조한다.
 
-# Create your views here.
