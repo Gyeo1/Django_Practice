@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'instagram',
     #third-apps
     'django_extensions',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware', #장고 디버그 툴바 미들웨어 추가!
 ]
 
 ROOT_URLCONF = 'askcompany.urls'
@@ -128,3 +130,7 @@ STATIC_URL = '/static/'
 #
 MEDIA_URL='/hellomedia/' #media 파일에 대한 URL prefix이다. 즉 파일에 접근시!
 MEDIA_ROOT=os.path.join(BASE_DIR,'media')#실제 파일을 저장하는 root 경로
+
+INTERNAL_IPS=[
+    '127.0.0.1', #로컬 호스트이다. 디버그 툴바를 확인한 ip를 설정
+]

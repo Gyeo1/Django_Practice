@@ -13,7 +13,7 @@ class Post(models.Model):
         return self.message
 
     class Meta:#meta class로 정렬하기 설정
-        ordering=['-id']
+        ordering=['-id'] #역순임 지금
 
 
 #     def message_length(self):
