@@ -9,6 +9,7 @@ class Post(models.Model):
     is_public=models.BooleanField(default=False, verbose_name='공개 여부')
     photo=models.ImageField(blank=True,upload_to='instagram/post/%Y/%m/%d')#upload_to는 해당 이름의 폴더에 저장한다는 뜻이다.
                                                                             #%y,m,d는 년 월일의 개념
+    tag_set=models.ManyToManyField('Tag')
     def __str__(self):
         #return f"Custom Post Object({self.id})"
         return self.message
@@ -25,7 +26,12 @@ class Comment(models.Model): #Comment 외래키의 예시
     create_at = models.DateTimeField(auto_now_add=True)
     update_at = models.DateTimeField(auto_now=True)
 
-
+class Tag(models.Model):
+    name= models.CharField(max_length=50, unique=True)
+    #포스트와 태그 관계를 M2M을하자. 어느 클래스에다 해도 무관함
+  #  post_set=models.ManyToManyField(Post,blank=True)
+    def __str__(self):
+        return self.name
 
 #     def message_length(self):
 #         return len(self.message)
