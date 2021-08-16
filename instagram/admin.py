@@ -1,6 +1,6 @@
 from django.contrib import admin
 #아래부터 추가한 내용
-from .models import Post
+from .models import Post,Comment
 from django.utils.safestring import mark_safe
 # Register your models here.
 
@@ -18,3 +18,6 @@ class PostAdmin(admin.ModelAdmin):
         return None
     def message_length(self,post):
         return len(post.message)
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    pass

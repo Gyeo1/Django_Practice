@@ -134,3 +134,5 @@ MEDIA_ROOT=os.path.join(BASE_DIR,'media')#실제 파일을 저장하는 root 경
 INTERNAL_IPS=[
     '127.0.0.1', #로컬 호스트이다. 디버그 툴바를 확인한 ip를 설정
 ]
+
+#AUTH_USER_MODEL='instagram.User' #내가 유저 모델을 직접 만들때 (앱에서) 기본 값은 auth.User이다.
