@@ -20,7 +20,8 @@ from django.conf import settings#settings를 import하려는 경우 이렇게 �
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog1/', include('blog1.urls')),
-    path('instagram/',include('instagram.urls'))
+    path('instagram/',include('instagram.urls')),
+    path('accounts/',include('accounts.urls')),
 ]
 # settings.MEDIA_URL
 # settings.MEDIA_ROOT
