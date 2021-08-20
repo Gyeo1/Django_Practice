@@ -22,5 +22,8 @@ def post_detail(request:HttpRequest, pk:int)->HttpResponse: #타입 힌트의 �
     response.write("Hello world!")
     return response
 
+def archives_year(request, year):
+    return HttpResponse(f"{year}년 archives")
+
 
 
