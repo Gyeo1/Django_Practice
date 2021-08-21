@@ -13,7 +13,7 @@ from .models import Post  # 모델 파일에서 Post 함수 가져오기
 #     return render(request,'instagram/post_list.html',{
 #         'post_list':qs,
 #     })
-post_list=ListView.as_view(model=Post) #이 한줄이 위의 내용을 포함한다. 근데 응용이 어렵다!
+post_list=ListView.as_view(model=Post,paginate_by=10) #이 한줄이 위의 내용을 포함한다. 근데 응용이 어렵다!
 
 #render로 html응답을 받아온다. 장고의 template 시스템을 활용하기 위한 함수.
 #render함수의 가운데 경로는 실제 instagram 내부의 경로로 실제 경로를 만들어 줘야 된다.
@@ -30,10 +30,19 @@ post_list=ListView.as_view(model=Post) #이 한줄이 위의 내용을 포함한
 #     return render(request,'instagram/post_detail.html',{
 #         'post':post,
 #     })
-post_detail=DetailView.as_view(model=Post)  #CBV로 할 경우
+class PostDetailView(DetailView): #DetailView를 상속받는 클래스 생성
+    model = Post
+    #queryset = Post.objects.filter(is_public=True)
+    def get_queryset(self):
+        qs=super().get_queryset() #부모의 쿼리셋을 받아온다는 뜻이다.
+        if not self.request.user.is_authenticated:
+            qs=qs.filter(is_public=True)
+        return qs
+
+# post_detail=DetailView.as_view(model=Post,
+#                                queryset=Post  .objects.filter(is_public=True),
+#                                )  #CBV로 할 경우
+post_detail=PostDetailView.as_view()
 
 def archives_year(request, year):
     return HttpResponse(f"{year}년 archives")
-
-
-
