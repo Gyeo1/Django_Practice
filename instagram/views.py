@@ -1,9 +1,9 @@
-from django.http import HttpResponse, HttpRequest
-from django.shortcuts import render
-from django.views.generic import ListView
+from django.http import HttpResponse, HttpRequest, Http404
+from django.shortcuts import render ,get_object_or_404
+from django.views.generic import ListView ,DetailView
 from .models import Post  # 모델 파일에서 Post 함수 가져오기
 
-post_list=ListView.as_view(model=Post) #이 한줄이 아래 모든 내용을 포함한다. 근데 응용이 어렵다!
+
 
 # def post_list(request):#호출 당시의 모든 내역을 전달 받는 함수!
 #     qs=Post.objects.all() #Post의 모든 객체를 쿼리해서 가져온다
@@ -13,14 +13,24 @@ post_list=ListView.as_view(model=Post) #이 한줄이 아래 모든 내용을 �
 #     return render(request,'instagram/post_list.html',{
 #         'post_list':qs,
 #     })
+post_list=ListView.as_view(model=Post) #이 한줄이 위의 내용을 포함한다. 근데 응용이 어렵다!
+
 #render로 html응답을 받아온다. 장고의 template 시스템을 활용하기 위한 함수.
 #render함수의 가운데 경로는 실제 instagram 내부의 경로로 실제 경로를 만들어 줘야 된다.
 #여기서 template의 post_list는 {}안의 post_list를 참조한다.
 
-def post_detail(request:HttpRequest, pk:int)->HttpResponse: #타입 힌트의 개념 #pk 가 capture된 문자열이다
-    response=HttpResponse()
-    response.write("Hello world!")
-    return response
+# def post_detail(request:HttpRequest, pk:int)->HttpResponse: #타입 힌트의 개념 #pk 가 capture된 문자열이다
+#     # try:
+#     #     post=Post.objects.get(pk=pk)#뒤의 pk는 함수 인자 pk와 같다.
+#     # except Post.DoesNotExist:
+#     #     raise Http404
+#
+#     post=get_object_or_404(Post,pk=pk) #위의 내용을 한줄로 간단하게!
+#
+#     return render(request,'instagram/post_detail.html',{
+#         'post':post,
+#     })
+post_detail=DetailView.as_view(model=Post)  #CBV로 할 경우
 
 def archives_year(request, year):
     return HttpResponse(f"{year}년 archives")
