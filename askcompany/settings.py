@@ -63,7 +63,10 @@ ROOT_URLCONF = 'askcompany.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            #파일 시스템 템플릿 로더: DIRS에서 정한 경로에서 템플릿을 찾는다!
+            os.path.join(BASE_DIR,'askcompany','templates')
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

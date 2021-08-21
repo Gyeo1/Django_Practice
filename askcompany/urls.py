@@ -17,7 +17,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings#settings를 import하려는 경우 이렇게 해라!
+from django.views.generic import TemplateView, RedirectView
+
 urlpatterns = [
+    # path('',TemplateView.as_view(template_name='root.html'),name='root'), #최상위 루트 url 추가해주기
+    path('',RedirectView.as_view(
+        #url='/instagram/'
+        pattern_name='instagram:post_list',
+        ),name='root'), #RedirectView 예시
     path('admin/', admin.site.urls),
     path('blog1/', include('blog1.urls')),
     path('instagram/',include('instagram.urls')),
