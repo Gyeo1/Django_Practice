@@ -1,10 +1,12 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, Http404
 from django.shortcuts import render ,get_object_or_404
+from django.utils.decorators import method_decorator
 from django.views.generic import ListView ,DetailView
 from .models import Post  # 모델 파일에서 Post 함수 가져오기
 
 
-
+# @login_required   #로그인 데코레이션
 # def post_list(request):#호출 당시의 모든 내역을 전달 받는 함수!
 #     qs=Post.objects.all() #Post의 모든 객체를 쿼리해서 가져온다
 #     q=request.GET.get('q','') #''은  키가 없을 때 빈칸을 반환 한다는 의미이다.
@@ -12,8 +14,15 @@ from .models import Post  # 모델 파일에서 Post 함수 가져오기
 #         qs=qs.filter(message__icontains=q) #qs즉 모든 객체에서 q라는 내용을 필터링해서 다시 넣는다.
 #     return render(request,'instagram/post_list.html',{
 #         'post_list':qs,
+#         'q':q,
 #     })
-post_list=ListView.as_view(model=Post,paginate_by=10) #이 한줄이 위의 내용을 포함한다. 근데 응용이 어렵다!
+#post_list=ListView.as_view(model=Post,paginate_by=10) #이 한줄이 위의 내용을 포함한다. 근데 응용이 어렵다!
+
+@method_decorator(login_required,name='dispatch')
+class PostList(ListView):
+    model = Post
+    paginate_by = 10
+post_list=PostList.as_view()
 
 #render로 html응답을 받아온다. 장고의 template 시스템을 활용하기 위한 함수.
 #render함수의 가운데 경로는 실제 instagram 내부의 경로로 실제 경로를 만들어 줘야 된다.
