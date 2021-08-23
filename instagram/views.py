@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, Http404
 from django.shortcuts import render ,get_object_or_404
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView ,DetailView
+from django.views.generic import ListView, DetailView, ArchiveIndexView, YearArchiveView
 from .models import Post  # 모델 파일에서 Post 함수 가져오기
 
 
@@ -16,13 +16,13 @@ from .models import Post  # 모델 파일에서 Post 함수 가져오기
 #         'post_list':qs,
 #         'q':q,
 #     })
-#post_list=ListView.as_view(model=Post,paginate_by=10) #이 한줄이 위의 내용을 포함한다. 근데 응용이 어렵다!
+post_list=ListView.as_view(model=Post,paginate_by=10) #이 한줄이 위의 내용을 포함한다. 근데 응용이 어렵다!
 
-@method_decorator(login_required,name='dispatch')
-class PostList(ListView):
-    model = Post
-    paginate_by = 10
-post_list=PostList.as_view()
+# @method_decorator(login_required,name='dispatch')
+# class PostList(ListView):
+#     model = Post
+#     paginate_by = 10
+# post_list=PostList.as_view()
 
 #render로 html응답을 받아온다. 장고의 template 시스템을 활용하기 위한 함수.
 #render함수의 가운데 경로는 실제 instagram 내부의 경로로 실제 경로를 만들어 줘야 된다.
@@ -53,5 +53,7 @@ class PostDetailView(DetailView): #DetailView를 상속받는 클래스 생성
 #                                )  #CBV로 할 경우
 post_detail=PostDetailView.as_view()
 
-def archives_year(request, year):
-    return HttpResponse(f"{year}년 archives")
+# def archives_year(request, year):
+#     return HttpResponse(f"{year}년 archives")
+post_archive=ArchiveIndexView.as_view(model=Post, date_field='create_at') #ArchiveIndexView 실습내용! 최신목록 보여주기
+post_archive_year=YearArchiveView.as_view(model=Post, date_field='create_at', make_object_list=True)
