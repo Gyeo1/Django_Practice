@@ -24,7 +24,7 @@ urlpatterns = [
     path('',RedirectView.as_view(
         #url='/instagram/'
         pattern_name='instagram:post_list',
-        ),name='root'), #RedirectView 예시
+        ),name='root'), #RedirectView 예시 이러면 LocalHost에 들어가면 바로 instagram으로 이동한다.
     path('admin/', admin.site.urls),
     path('blog1/', include('blog1.urls')),
     path('instagram/',include('instagram.urls')),
