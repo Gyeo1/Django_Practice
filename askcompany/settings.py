@@ -26,7 +26,6 @@ SECRET_KEY = 'a5iks%a)v!%b65rkk1s#qvd1o%u&%usjajtf2v(_g^*g&2sqvq'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'b366-222-101-96-224.ngrok.io'
 ]
 
 
@@ -133,8 +132,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT=os.path.join(BASE_DIR,'staticfiles')
-STATICFILES_DIR=[
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
+STATICFILES_DIR = [
     os.path.join(BASE_DIR,'askcompany','static'),
 ]
 #
