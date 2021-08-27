@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, Http404
 from django.shortcuts import render, get_object_or_404, redirect
@@ -5,11 +6,15 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, ArchiveIndexView, YearArchiveView
 from .models import Post  # 모델 파일에서 Post 함수 가져오기
 from .forms import PostForm
+
+@login_required
 def post_new(request):
     if request.method=='POST': #만약 POST 메소드 발생시
         form=PostForm(request.POST, request.FILES) #POST와 파일을 인자값으로
         if form.is_valid(): # 인자로 받은 값에 대해서 유효성을 검증 , 검증 성공한 값을 사전형으로 제공받음 제대로 제공 받으면 FORM의 역할끝!
-            post=form.save()    #필요에 따라 DB에 저장하기
+            post = form.save(commit=False)  # 필요에 따라 DB에 저장하기 #commit을 False로 두면 post.save가 아직 안옴
+            post.author = request.user  # 현재 로그인 유저 인스턴스를 받아옴
+            post.save()  # 받고 나서 post.save 실행 // 주의사항! 로그인을 보장 받아야 된다. 따라서 @ 위에다 붙이기
             return redirect(post)
         else:
             form.errors #검증실패시 오류정보 저장.
@@ -19,7 +24,28 @@ def post_new(request):
                   {
                       'form':form
                   })
+@login_required
+def post_edit(request,pk):
+    post=get_object_or_404(Post,pk=pk)
 
+    #작성자 check Tip!
+    if post.author != request.user: #만약 사용자가 다르면 딴곳으로 보내라.
+        messages.error(request,'작성자만 수정 할 수 있습니다!')
+        return redirect(post)
+
+    if request.method=='POST': #만약 POST 메소드 발생시
+        form=PostForm(request.POST, request.FILES, instance=post) #POST와 파일을 인자값으로
+        if form.is_valid(): # 인자로 받은 값에 대해서 유효성을 검증 , 검증 성공한 값을 사전형으로 제공받음 제대로 제공 받으면 FORM의 역할끝!
+            post=form.save()    #필요에 따라 DB에 저장하기 #commit을 False로 두면 post.save가 아직 안옴
+            return redirect(post)
+        else:
+            form.errors #검증실패시 오류정보 저장.
+    else:#GET 요청일때
+        form=PostForm(instance=post)
+    return render(request,'instagram/post_form.html',
+                  {
+                      'form':form
+                  })
 
 # @login_required   #로그인 데코레이션
 # def post_list(request):#호출 당시의 모든 내역을 전달 받는 함수!
