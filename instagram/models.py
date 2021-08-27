@@ -2,11 +2,14 @@ from django.db import models
 from django.conf import settings
 # Create your models here.
 from django.urls import reverse
+from django.core.validators import MinLengthValidator
 
 
 class Post(models.Model):
     author=models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    message=models.TextField()
+    message=models.TextField(
+        validators=[MinLengthValidator(10)]#최소 10글자는 써라
+    )
     create_at=models.DateTimeField(auto_now_add=True)
     update_at=models.DateTimeField(auto_now=True)
     is_public=models.BooleanField(default=False, verbose_name='공개 여부')

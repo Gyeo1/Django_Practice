@@ -1,9 +1,24 @@
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, HttpRequest, Http404
-from django.shortcuts import render ,get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, DetailView, ArchiveIndexView, YearArchiveView
 from .models import Post  # 모델 파일에서 Post 함수 가져오기
+from .forms import PostForm
+def post_new(request):
+    if request.method=='POST': #만약 POST 메소드 발생시
+        form=PostForm(request.POST, request.FILES) #POST와 파일을 인자값으로
+        if form.is_valid(): # 인자로 받은 값에 대해서 유효성을 검증 , 검증 성공한 값을 사전형으로 제공받음 제대로 제공 받으면 FORM의 역할끝!
+            post=form.save()    #필요에 따라 DB에 저장하기
+            return redirect(post)
+        else:
+            form.errors #검증실패시 오류정보 저장.
+    else:#GET 요청일때
+        form=PostForm()
+    return render(request,'instagram/post_form.html',
+                  {
+                      'form':form
+                  })
 
 
 # @login_required   #로그인 데코레이션
