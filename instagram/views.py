@@ -53,6 +53,18 @@ def post_edit(request,pk):
                       'form':form,
                       'post':post, #수정할 시에는 post값을 그대로 반환!
                   })
+@login_required
+def post_delete(request,pk):
+    post=get_object_or_404(Post,pk=pk)
+    if request.method=='POST':
+        post.delete()
+        messages.success(request,'포스팅을 삭제했습니다')
+        return redirect('instagram:post_list')
+        #삭제후 redirect!
+    return render(request,'instagram/post_confirm_delete.html',{
+        'post':post,
+    })
+
 
 # @login_required   #로그인 데코레이션
 # def post_list(request):#호출 당시의 모든 내역을 전달 받는 함수!
