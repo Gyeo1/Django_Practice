@@ -3,68 +3,96 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, HttpRequest, Http404
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, DetailView, ArchiveIndexView, YearArchiveView
+from django.views.generic import ListView, DetailView, ArchiveIndexView, YearArchiveView, CreateView, UpdateView, \
+    DeleteView
 from .models import Post  # 모델 파일에서 Post 함수 가져오기
 from .forms import PostForm
 
-@login_required
-def post_new(request):
-    if request.method=='POST': #만약 POST 메소드 발생시
-        form=PostForm(request.POST, request.FILES) #POST와 파일을 인자값으로
-        if form.is_valid(): # 인자로 받은 값에 대해서 유효성을 검증 , 검증 성공한 값을 사전형으로 제공받음 제대로 제공 받으면 FORM의 역할끝!
-            post = form.save(commit=False)  # 필요에 따라 DB에 저장하기 #commit을 False로 두면 post.save가 아직 안옴
-            post.author = request.user  # 현재 로그인 유저 인스턴스를 받아옴
-            post.save()  # 받고 나서 post.save 실행 // 주의사항! 로그인을 보장 받아야 된다. 따라서 @ 위에다 붙이기
+# @login_required
+# def post_new(request):
+#     if request.method=='POST': #만약 POST 메소드 발생시
+#         form=PostForm(request.POST, request.FILES) #POST와 파일을 인자값으로
+#         if form.is_valid(): # 인자로 받은 값에 대해서 유효성을 검증 , 검증 성공한 값을 사전형으로 제공받음 제대로 제공 받으면 FORM의 역할끝!
+#             post = form.save(commit=False)  # 필요에 따라 DB에 저장하기 #commit을 False로 두면 post.save가 아직 안옴
+#             post.author = request.user  # 현재 로그인 유저 인스턴스를 받아옴
+#             post.save()  # 받고 나서 post.save 실행 // 주의사항! 로그인을 보장 받아야 된다. 따라서 @ 위에다 붙이기
+# 
+#             messages.success(request, '포스팅을 저장했습니다.')  # messages 등록!
+#             return redirect(post)
+#         else:
+#             form.errors #검증실패시 오류정보 저장.
+#     else:#GET 요청일때
+#         form=PostForm() #빈 form을 만들어 준다.
+#     return render(request,'instagram/post_form.html',
+#                   {
+#                       'form':form,
+#                       'post':None, #새로 만들때는 post값을 none으로 준다
+#                   })
+class PostCreateView(LoginRequiredMixin,CreateView):
+    model = Post
+    form_class = PostForm
+    def form_valid(self, form): #위에서 작성자만 삭제하게 했으므로
+        self.object=form.save(commit=False)
+        self.object.author=self.request.user
+        messages.success(self.request,'포스팅을 저장했습니다')
+        return super().form_valid(form)
+post_new=PostCreateView.as_view()
 
-            messages.success(request, '포스팅을 저장했습니다.')  # messages 등록!
-            return redirect(post)
-        else:
-            form.errors #검증실패시 오류정보 저장.
-    else:#GET 요청일때
-        form=PostForm()
-    return render(request,'instagram/post_form.html',
-                  {
-                      'form':form,
-                      'post':None, #새로 만들때는 post값을 none으로 준다
-                  })
-@login_required
-def post_edit(request,pk):
-    post=get_object_or_404(Post,pk=pk)
 
-    #작성자 check Tip!
-    if post.author != request.user: #만약 사용자가 다르면 딴곳으로 보내라.
-        messages.error(request,'작성자만 수정 할 수 있습니다!')
-        return redirect(post)
+# @login_required
+# def post_edit(request,pk):
+#     post=get_object_or_404(Post,pk=pk)
+#
+#     #작성자 check Tip!
+#     if post.author != request.user: #만약 사용자가 다르면 딴곳으로 보내라.
+#         messages.error(request,'작성자만 수정 할 수 있습니다!')
+#         return redirect(post)
+#
+#     if request.method=='POST': #만약 POST 메소드 발생시
+#         form=PostForm(request.POST, request.FILES, instance=post) #POST와 파일을 인자값으로 PostForm 생성!
+#         if form.is_valid(): # 인자로 받은 값에 대해서 유효성을 검증 , 검증 성공한 값을 사전형으로 제공받음 제대로 제공 받으면 FORM의 역할끝!
+#             post=form.save()    #필요에 따라 DB에 저장하기 #commit을 False로 두면 post.save가 아직 안옴
+#
+#             messages.success(request, '포스팅을 수정했습니다.')  # messages 등록!
+#             return redirect(post)
+#         else:
+#             form.errors #검증실패시 오류정보 저장.
+#     else:#GET 요청일때
+#         form=PostForm(instance=post)
+#     return render(request,'instagram/post_form.html',
+#                   {
+#                       'form':form,
+#                       'post':post, #수정할 시에는 post값을 그대로 반환!
+#                   })
+class PostUpdateView(LoginRequiredMixin,UpdateView):
+    model = Post
+    form_class = PostForm
+    def form_valid(self, form):
+        return super().form_valid(form)
 
-    if request.method=='POST': #만약 POST 메소드 발생시
-        form=PostForm(request.POST, request.FILES, instance=post) #POST와 파일을 인자값으로
-        if form.is_valid(): # 인자로 받은 값에 대해서 유효성을 검증 , 검증 성공한 값을 사전형으로 제공받음 제대로 제공 받으면 FORM의 역할끝!
-            post=form.save()    #필요에 따라 DB에 저장하기 #commit을 False로 두면 post.save가 아직 안옴
+post_edit=PostUpdateView.as_view()
 
-            messages.success(request, '포스팅을 수정했습니다.')  # messages 등록!
-            return redirect(post)
-        else:
-            form.errors #검증실패시 오류정보 저장.
-    else:#GET 요청일때
-        form=PostForm(instance=post)
-    return render(request,'instagram/post_form.html',
-                  {
-                      'form':form,
-                      'post':post, #수정할 시에는 post값을 그대로 반환!
-                  })
-@login_required
-def post_delete(request,pk):
-    post=get_object_or_404(Post,pk=pk)
-    if request.method=='POST':
-        post.delete()
-        messages.success(request,'포스팅을 삭제했습니다')
-        return redirect('instagram:post_list')
-        #삭제후 redirect!
-    return render(request,'instagram/post_confirm_delete.html',{
-        'post':post,
-    })
+# @login_required
+# def post_delete(request,pk):
+#     post=get_object_or_404(Post,pk=pk)
+#     if request.method=='POST':
+#         post.delete()
+#         messages.success(request,'포스팅을 삭제했습니다')
+#         return redirect('instagram:post_list')
+#         #삭제후 redirect!
+#     return render(request,'instagram/post_confirm_delete.html',{
+#         'post':post,
+#     })
+class PostDeleteView(LoginRequiredMixin,DeleteView):
+    model = Post
+    # success_url = reverse('instagram:post_list') #삭제 성공시 이동할 url!
+    #success_url은 에러가 뜨는데 why?==>프로젝트를 로딩해야 reverse가 발생하는데 로딩하기 전에 success_url이 수행되기 때문이다.
+    def get_success_url(self):
+        return reverse('instagram:post_list') #이렇게 해줘야 된다. 혹은 reverse_laze()를 사용해라!
 
+post_delete=PostDeleteView.as_view()
 
 # @login_required   #로그인 데코레이션
 # def post_list(request):#호출 당시의 모든 내역을 전달 받는 함수!
@@ -116,7 +144,6 @@ class PostDetailView(DetailView): #DetailView를 상속받는 클래스 생성
 #                                queryset=Post  .objects.filter(is_public=True),
 #                                )  #CBV로 할 경우
 post_detail=PostDetailView.as_view()
-
 # def archives_year(request, year):
 #     return HttpResponse(f"{year}년 archives")
 post_archive=ArchiveIndexView.as_view(model=Post, date_field='create_at') #ArchiveIndexView 실습내용! 최신목록 보여주기
