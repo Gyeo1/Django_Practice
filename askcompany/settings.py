@@ -146,3 +146,8 @@ INTERNAL_IPS=[
 ]
 
 #AUTH_USER_MODEL='instagram.User' #내가 유저 모델을 직접 만들때 (앱에서) 기본 값은 auth.User이다.
+from django.contrib.messages import constants as messages_constants
+MESSAGE_TAGS={ #Bootstrap4와 장고 Messages_Level의 스타일을 같게 하기 위한 TAG 설정
+    messages_constants.DEBUG: 'secondary',
+    messages_constants.ERROR: 'danger',
+}

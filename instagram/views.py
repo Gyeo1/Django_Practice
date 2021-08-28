@@ -25,7 +25,8 @@ def post_new(request):
         form=PostForm()
     return render(request,'instagram/post_form.html',
                   {
-                      'form':form
+                      'form':form,
+                      'post':None, #새로 만들때는 post값을 none으로 준다
                   })
 @login_required
 def post_edit(request,pk):
@@ -49,7 +50,8 @@ def post_edit(request,pk):
         form=PostForm(instance=post)
     return render(request,'instagram/post_form.html',
                   {
-                      'form':form
+                      'form':form,
+                      'post':post, #수정할 시에는 post값을 그대로 반환!
                   })
 
 # @login_required   #로그인 데코레이션
