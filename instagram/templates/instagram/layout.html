@@ -41,6 +41,12 @@
       </div>
     </div>
   </nav>
+{% for message in messages %}
+<div class="alert alert-{{message.tags}}">
+    {{message.message}}
+    {{message.tags}}
+</div>
+{% endfor %}
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
@@ -53,4 +59,5 @@
 </div>
 
 </body>
+
 </html>
