@@ -1,0 +1,13 @@
+{% extends 'accounts/layout.html' %}
+
+{% block content %}
+    <h2>User: {{ user }}</h2>
+
+    {% if user.profile %}
+    <ul>
+        <li>{{ user.profile.address }}</li>
+        <li>{{ user.profile.zipcode }}</li>
+    </ul>
+    {% endif %}
+
+{% endblock content %}
