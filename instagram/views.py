@@ -66,7 +66,7 @@ post_new=PostCreateView.as_view()
 #                       'form':form,
 #                       'post':post, #수정할 시에는 post값을 그대로 반환!
 #                   })
-class PostUpdateView(LoginRequiredMixin,UpdateView):
+class PostUpdateView(LoginRequiredMixin,UpdateView): #update뷰가 edit의 개념이다.
     model = Post
     form_class = PostForm
     def form_valid(self, form):
