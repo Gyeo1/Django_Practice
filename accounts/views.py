@@ -56,5 +56,3 @@ class SignUpView(CreateView):
 
 signup=SignUpView.as_view()
 
-def logout(request):
-    pass
