@@ -10,8 +10,5 @@ urlpatterns=[
     path('profile/',views.profile, name='profile'), #이렇게 하면 profile url로 이동시 views의 profile로 가 랜더링 된다.
     path('profile/edit',views.profile_edit, name='profile_edit'),
     path('signup/',views.signup, name='signup'),
-    path('logout/',LogoutView.as_view(
-
-    ), name='logout'),
-
+    path('logout/',LogoutView.as_view(), name='logout'),
 ]
