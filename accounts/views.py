@@ -28,7 +28,7 @@ def profile_edit(request):
             profile = form.save(commit=False)
             profile.user=request.user
             profile.save()
-            return redirect('profile')
+            return redirect('profile') #여기서 profile은 위의 profile 함수의 url로 보내는것.
     else:
         form=ProfileForm(instance=profile)
     return render(request,'accounts/profile_form.html',{
@@ -39,3 +39,9 @@ def profile_edit(request):
 #     model = Profile
 #     form_class = ProfileForm
 # profile_edit = ProfileUpdateView.as_view()
+
+def signup(request):
+    pass
+
+def logout(request):
+    pass
