@@ -1,9 +1,12 @@
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 
 # Create your views here.
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import TemplateView, UpdateView, CreateView
 from accounts.form import ProfileForm
 from accounts.models import Profile
 
@@ -40,8 +43,13 @@ def profile_edit(request):
 #     form_class = ProfileForm
 # profile_edit = ProfileUpdateView.as_view()
 
-def signup(request):
-    pass
+User=get_user_model() #절대models에서 받아오지 마라!
+signup=CreateView.as_view(
+    model=User,
+    form_class=UserCreationForm,
+    success_url=settings.LOGIN_URL,
+    template_name='accounts/signup_form.html'
+)
 
 def logout(request):
     pass
